@@ -30,6 +30,7 @@
 #define CEREAL_ARCHIVES_BINARY_HPP_
 
 #include <cereal/cereal.hpp>
+#include <nds.h>
 #include <sstream>
 
 namespace cereal
@@ -66,8 +67,7 @@ namespace cereal
       {
         auto const writtenSize = static_cast<std::size_t>( itsStream.rdbuf()->sputn( reinterpret_cast<const char*>( data ), size ) );
 
-        if(writtenSize != size)
-          throw Exception("Failed to write " + std::to_string(size) + " bytes to output stream! Wrote " + std::to_string(writtenSize));
+	sassert(writtenSize == size, "Failed to write the correct number of bytes to the output stream.");
       }
 
     private:
@@ -100,9 +100,7 @@ namespace cereal
       void loadBinary( void * const data, std::size_t size )
       {
         auto const readSize = static_cast<std::size_t>( itsStream.rdbuf()->sgetn( reinterpret_cast<char*>( data ), size ) );
-
-        if(readSize != size)
-          throw Exception("Failed to read " + std::to_string(size) + " bytes from input stream! Read " + std::to_string(readSize));
+	sassert(readSize == size, "Failed to read the correct number of bytes from the input stream.");
       }
 
     private:
